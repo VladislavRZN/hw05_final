@@ -46,22 +46,9 @@ class Post(models.Model):
 
 
 class Group(models.Model):
-    title = models.CharField(
-        max_length=200,
-        verbose_name='Заголовок'
-    )
-    slug = models.SlugField(
-        unique=True,
-        max_length=50
-    )
-    description = models.TextField(
-        max_length=400,
-        verbose_name='Описание'
-    )
-    
-    class Meta:
-        verbose_name_plural = 'Группы'
-        verbose_name = 'Группу'
+    title = models.CharField('Заголовок', max_length=200)
+    slug = models.SlugField('Группа', unique=True)
+    description = models.TextField('Описание')
 
     def __str__(self) -> str:
         return self.title
@@ -96,7 +83,7 @@ class Comment(models.Model):
         verbose_name_plural = 'Комментарии'
 
     def __str__(self) -> str:
-        return f'{self.author}:{self.text[:settings.POST_LIMIT]}'
+        return f'{self.author}: {self.text[:settings.POST_LIMIT]}'
 
 
 class Follow(models.Model):

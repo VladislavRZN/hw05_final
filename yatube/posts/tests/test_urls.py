@@ -1,13 +1,11 @@
-from http import HTTPStatus
-
-from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.test import Client, TestCase
 from django.urls import reverse
 
+from http import HTTPStatus
+
 from ..models import Group, Post, User
 
-User = get_user_model()
 INDEX = reverse('posts:index')
 CREATE = reverse('posts:post_create')
 GROUP = reverse('posts:group_list',
@@ -52,17 +50,6 @@ class PostURLTests(TestCase):
                 response = self.client.get(address)
                 self.assertEqual(response.status_code, status)
 
-    def test_autorized_urls(self):
-        # Проверяем страницы доступные автору поста
-        urls_names = {
-            f'/posts/{self.post.pk}/edit/': HTTPStatus.OK.value,
-            CREATE: HTTPStatus.OK.value,
-        }
-        for address, status in urls_names.items():
-            with self.subTest(status=status):
-                response = self.authorized_client.get(address)
-                self.assertEqual(response.status_code, status)
-
     def test_url_to_template(self):
         # Проверка соответсвия url и template
         urls_template = {
@@ -78,6 +65,17 @@ class PostURLTests(TestCase):
                 response = self.authorized_client.get(address)
                 self.assertTemplateUsed(response, template)
 
+    def test_autorized_urls(self):
+        # Проверяем страницы доступные автору поста
+        urls_names = {
+            f'/posts/{self.post.pk}/edit/': HTTPStatus.OK.value,
+            CREATE: HTTPStatus.OK.value,
+        }
+        for address, status in urls_names.items():
+            with self.subTest(status=status):
+                response = self.authorized_client.get(address)
+                self.assertEqual(response.status_code, status)
+
     def test_post_edit_no_author(self):
         # Проверка редактирования поста не автором
         response = self.client.get(
@@ -85,7 +83,8 @@ class PostURLTests(TestCase):
         self.assertRedirects(response, (
             f'/auth/login/?next=/posts/{self.post.pk}/edit/'))
 
-    def test_404(self):
-        """Страница 404 отдает кастомный шаблон."""
-        response = self.client.get('/unexisting_page/')
+    # Проверяем статус 404 для авторизованного пользователя
+    def test_task_list_url_redirect_anonymous(self):
+        # Страница /unexisting_page/ не существует.
+        response = self.authorized_client.get('/unexisting_page/')
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)

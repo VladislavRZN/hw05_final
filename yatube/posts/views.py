@@ -7,6 +7,8 @@ from django.views.decorators.cache import cache_page
 from .models import Follow, Group, Post, User
 from .forms import CommentForm, PostForm
 
+# @cache_page(20, key_prefix="index_page")
+
 
 def paginator_object(request, post_list):
     paginator = Paginator(post_list, settings.POSTS_ON_PAGE)

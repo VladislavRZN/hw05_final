@@ -17,7 +17,6 @@ class PostAdmin(admin.ModelAdmin):
     search_fields = ('text',)
     list_filter = ('pub_date',)
     empty_value_display = '-пусто-'
-    settings.EMPTY_VALUE_DISPLAY
 
 
 @admin.register(Group)
@@ -28,7 +27,6 @@ class GroupAdmin(admin.ModelAdmin):
         'description',
     )
     search_fields = ('title',)
-    settings.EMPTY_VALUE_DISPLAY
 
 
 @admin.register(Comment)

@@ -6,8 +6,6 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Follow, Group, Post, User
 from .forms import CommentForm, PostForm
 
-# @cache_page(20, key_prefix="index_page")
-
 
 def paginator_object(request, post_list):
     paginator = Paginator(post_list, settings.POSTS_ON_PAGE)
@@ -58,12 +56,11 @@ def profile(request, username):
 
 def post_detail(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
-    title = post.text[0:30]
     form = CommentForm(request.POST or None)
     comments = post.comments.all()
     context = {
         'post': post,
-        'title': title,
+        'title': post.text[0:30],
         'form': form,
         'comments': comments
     }
@@ -74,13 +71,11 @@ def post_detail(request, post_id):
 def post_create(request):
     form = PostForm(request.POST or None,
                     files=request.FILES or None)
-    if request.method == 'POST':
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
-            post.save()
-            return redirect('posts:profile', post.author.username)
-        return render(request, 'posts/create_post.html', {'form': form})
+    if form.is_valid():
+        post = form.save(commit=False)
+        post.author = request.user
+        post.save()
+        return redirect('posts:profile', post.author.username)
     return render(request, 'posts/create_post.html', {'form': form})
 
 

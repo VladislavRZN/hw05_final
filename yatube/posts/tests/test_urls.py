@@ -4,7 +4,7 @@ from django.urls import reverse
 
 from http import HTTPStatus
 
-from ..models import Group, Post, User
+from ..models import Follow, Group, Post, User
 
 INDEX = reverse('posts:index')
 CREATE = reverse('posts:post_create')
@@ -88,3 +88,27 @@ class PostURLTests(TestCase):
         # Страница /unexisting_page/ не существует.
         response = self.authorized_client.get('/unexisting_page/')
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
+
+    def test_404(self):
+        # Страница 404 отдает кастомный шаблон для неавторизованного потльзователя
+        response = self.client.get('/unexisting_page/')
+        self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
+
+    def test_follow_url(self):
+        # тестирование подписчиков
+        author = User.objects.create_user(username='author')
+        response = self.authorized_client.get(
+            f'/profile/{author.username}/follow/'
+        )
+        self.assertRedirects(response, f'/profile/{author.username}/')
+
+    def test_unfollow_url(self):
+        author = User.objects.create_user(username='author')
+        Follow.objects.create(
+            user=self.author,
+            author=author
+        )
+        response = self.authorized_client.get(
+            f'/profile/{author.username}/unfollow/'
+        )
+        self.assertRedirects(response, f'/profile/{author.username}/')

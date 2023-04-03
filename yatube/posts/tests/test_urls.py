@@ -90,7 +90,8 @@ class PostURLTests(TestCase):
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
 
     def test_404(self):
-        # Страница 404 отдает кастомный шаблон для неавторизованного потльзователя
+        # Страница 404 отдает кастомный шаблон
+        # для неавторизованного потльзователя
         response = self.client.get('/unexisting_page/')
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
 

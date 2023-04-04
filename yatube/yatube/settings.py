@@ -1,7 +1,5 @@
 import os
 
-EMPTY_VALUE_DISPLAY = '-пусто-'
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = '4013)2##v+5h_z_)bi4!ud%@2_5@s_l*qdn*-y9g)%-b%cbvv='

@@ -39,11 +39,9 @@ class CommentAdmin(admin.ModelAdmin):
     )
     search_fields = ('text', 'author',)
     list_filter = ('created',)
-    settings.EMPTY_VALUE_DISPLAY
 
 
 @admin.register(Follow)
 class FollowAdmin(admin.ModelAdmin):
     list_display = ('pk', 'user', 'author',)
     search_fields = ('author',)
-    settings.EMPTY_VALUE_DISPLAY
